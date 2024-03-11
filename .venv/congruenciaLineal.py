@@ -6,6 +6,7 @@ def congruencia_lineal(semilla, a, c, m, n):
         numeros.append(semilla / (m - 1))
     return numeros
 
+
 semilla = 1  # Semilla inicial
 a = 9  # pendiente
 c = 3  # Intercepto
