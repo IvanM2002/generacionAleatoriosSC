@@ -132,6 +132,7 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_csv_congLi.grid(row=9, column=0, columnspan=2, padx=5, pady=5)
 
 
+
     #  self.progressbar_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
 
     # Inicializamos las barras de progreso
