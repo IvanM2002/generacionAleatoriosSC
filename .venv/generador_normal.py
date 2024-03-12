@@ -2,6 +2,7 @@ import random
 from scipy.stats import norm
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 # Parámetros del generador lineal congruencial
 a = 1664525                         #Pendiente  = {a E Z | 1 <= a < m}
@@ -54,6 +55,12 @@ def generar_grafica():
 
     # Mostrar el histograma
     plt.show()
+    
+def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
+    with open(nombre_archivo, 'w', newline='') as archivo_csv:
+        escritor_csv = csv.writer(archivo_csv)
+        escritor_csv.writerow(['pseudoaleatorios'])
+        escritor_csv.writerows(map(lambda x: [x], ni))    
 
 
 generarDistrNormal(semilla,50000)

@@ -1,6 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 # Parámetros del generador con distribucion Uniforme 
 maxI = 10                            #Intervalo superior
@@ -57,6 +58,12 @@ def generar_histograma(num_intervalos):
 
     # Mostrar el gráfico
     plt.show()
+    
+def guardar_en_csv(nombre_archivo='distribucionUniforme.csv'):
+    with open(nombre_archivo, 'w', newline='') as archivo_csv:
+        escritor_csv = csv.writer(archivo_csv)
+        escritor_csv.writerow(['pseudoaleatorios'])
+        escritor_csv.writerows(map(lambda x: [x], ni))        
     
     
 generarDistrUniforme(ri,maxI,minI,semilla,10000)
