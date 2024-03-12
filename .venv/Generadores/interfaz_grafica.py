@@ -3,25 +3,33 @@ from tkinter import ttk
 from tkinter import messagebox
 import generador_uniforme
 import generador_normal
+import congruenciaLineal
+
 
 class InterfazGrafica(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Interfaz Gráfica")
-        self.geometry("400x350")
-        
+        self.geometry("500x350")
+
         # Creamos el panel de pestañas
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True)
-        
+
         # Creamos los paneles de las pestañas
         self.panel_uniforme = ttk.Frame(self.notebook)
         self.panel_normal = ttk.Frame(self.notebook)
-        
+        self.panel_congruenciaLineal = ttk.Frame(self.notebook)
+        self.panel_congruenciaMulti = ttk.Frame(self.notebook)
+        self.panel_congruenciaCuadrados = ttk.Frame(self.notebook)
+
         # Agregamos los paneles a las pestañas
         self.notebook.add(self.panel_uniforme, text="Distribución Uniforme")
         self.notebook.add(self.panel_normal, text="Distribución Normal")
-        
+        self.notebook.add(self.panel_congruenciaLineal, text="Congruencia Lineal")
+        self.notebook.add(self.panel_congruenciaMulti, text="Congruencia Multiplicativa")
+        self.notebook.add(self.panel_congruenciaCuadrados, text="Cuadrados Medios")
+
         # Creamos los widgets necesarios para el panel de distribución uniforme
         self.label_max_intervalo = ttk.Label(self.panel_uniforme, text="Máximo Intervalo:")
         self.entry_max_intervalo = ttk.Entry(self.panel_uniforme)
@@ -36,9 +44,8 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_distribucion = ttk.Button(self.panel_uniforme, text="Generar Distribución Uniforme", command=self.generar_distribucion_uniforme)
         self.btn_generar_grafica = ttk.Button(self.panel_uniforme, text="Generar Gráfica", command=self.generar_grafica, state="disabled")
         self.btn_generar_csv = ttk.Button(self.panel_uniforme, text="Generar CSV", command=self.generar_csv, state="disabled")
-       # self.progressbar_uniforme = ttk.Progressbar(self.panel_uniforme, orient="horizontal", length=200, mode="indeterminate")
-        
-        
+        # self.progressbar_uniforme = ttk.Progressbar(self.panel_uniforme, orient="horizontal", length=200, mode="indeterminate")
+
         # Alineamos los widgets en el panel de distribución uniforme
         self.label_max_intervalo.grid(row=0, column=0, padx=5, pady=5, sticky="e")
         self.entry_max_intervalo.grid(row=0, column=1, padx=5, pady=5)
@@ -53,9 +60,9 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_distribucion.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_grafica.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_csv.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
-       # self.progressbar_uniforme.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
-      #  self.progressbar_uniforme.grid_remove()  # Ocultar la barra de progreso inicialmente
-        
+        # self.progressbar_uniforme.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+        #  self.progressbar_uniforme.grid_remove()  # Ocultar la barra de progreso inicialmente
+
         # Creamos los widgets necesarios para el panel de distribución normal
         self.label_semilla_normal = ttk.Label(self.panel_normal, text="Semilla:")
         self.entry_semilla_normal = ttk.Entry(self.panel_normal)
@@ -64,8 +71,8 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_distribucion_normal = ttk.Button(self.panel_normal, text="Generar Distribución Normal", command=self.generar_distribucion_normal)
         self.btn_generar_grafica_normal = ttk.Button(self.panel_normal, text="Generar Gráfica", command=self.generar_grafica_normal, state="disabled")
         self.btn_generar_csv_normal = ttk.Button(self.panel_normal, text="Generar CSV", command=self.generar_csv_normal, state="disabled")
-       # self.progressbar_normal = ttk.Progressbar(self.panel_normal, orient="horizontal", length=200, mode="indeterminate")
-        
+        # self.progressbar_normal = ttk.Progressbar(self.panel_normal, orient="horizontal", length=200, mode="indeterminate")
+
         # Alineamos los widgets en el panel de distribución normal
         self.label_semilla_normal.grid(row=0, column=0, padx=5, pady=5, sticky="e")
         self.entry_semilla_normal.grid(row=0, column=1, padx=5, pady=5)
@@ -74,18 +81,70 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_distribucion_normal.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_grafica_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_csv_normal.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
-      #  self.progressbar_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)        
-        
-        # Inicializamos las barras de progreso
-       # self.progressbar_uniforme.stop()
-       # self.progressbar_normal.stop()
-    
+
+        # funcion para validar numeros
+        def validate_int(value_if_allowed):
+            if value_if_allowed.isdigit() or value_if_allowed == "":
+                return True
+            else:
+                messagebox.showinfo("Error", "Solo se permiten números enteros.")
+                return False
+
+        # Registramos la función de validación
+        validate_int_func = self.register(validate_int)
+
+        # Creamos los widgets necesarios para congruencia lineal
+        self.label_semilla_congLi = ttk.Label(self.panel_congruenciaLineal, text="Semilla:")
+        self.entry_semilla_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_max_intervalo_congLi = ttk.Label(self.panel_congruenciaLineal, text="Max:")
+        self.entry_max_intervalo_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_min_intervalo_congLi = ttk.Label(self.panel_congruenciaLineal, text="Min: ")
+        self.entry_min_intervalo_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_k_congLi = ttk.Label(self.panel_congruenciaLineal, text="pendiente (k): ")
+        self.entry_k_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_c_congLi = ttk.Label(self.panel_congruenciaLineal, text="Intercepto (c): ")
+        self.entry_c_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_g_congLi = ttk.Label(self.panel_congruenciaLineal, text="Campo numerico (g): ")
+        self.entry_g_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_total_congLi = ttk.Label(self.panel_congruenciaLineal, text="Total ")
+        self.entry_total_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.btn_generar_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Congruencia Lineal", command=self.generar_distribucion_normal)
+        self.btn_generar_grafica_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Gráfica", command=self.generar_grafica_normal, state="disabled")
+        self.btn_generar_csv_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar CSV", command=self.generar_csv_normal, state="disabled")
+
+        # Alineamos los widgets en el panel de congruencia lineal
+        self.label_semilla_congLi.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.entry_semilla_congLi.grid(row=0, column=1, padx=5, pady=5)
+        self.label_max_intervalo_congLi.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.entry_max_intervalo_congLi.grid(row=1, column=1, padx=5, pady=5)
+        self.label_min_intervalo_congLi.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+        self.entry_min_intervalo_congLi.grid(row=2, column=1, padx=5, pady=5)
+        self.label_k_congLi.grid(row=3, column=0, padx=5, pady=5, sticky="e")
+        self.entry_k_congLi.grid(row=3, column=1, padx=5, pady=5)
+        self.label_c_congLi.grid(row=4, column=0, padx=5, pady=5, sticky="e")
+        self.entry_c_congLi.grid(row=4, column=1, padx=5, pady=5)
+        self.label_g_congLi.grid(row=5, column=0, padx=5, pady=5, sticky="e")
+        self.entry_g_congLi.grid(row=5, column=1, padx=5, pady=5)
+        self.label_total_congLi.grid(row=6, column=0, padx=5, pady=5, sticky="e")
+        self.entry_total_congLi.grid(row=6, column=1, padx=5, pady=5)
+        self.btn_generar_congLi.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_grafica_congLi.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_csv_congLi.grid(row=9, column=0, columnspan=2, padx=5, pady=5)
+
+
+    #  self.progressbar_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+
+    # Inicializamos las barras de progreso
+    # self.progressbar_uniforme.stop()
+    # self.progressbar_normal.stop()
+
     def validar_campos_uniforme(self):
         if self.entry_max_intervalo.get() == "" or self.entry_min_intervalo.get() == "" or self.entry_total.get() == "" or self.entry_num_intervalos.get() == "":
-            messagebox.showinfo("Advertencia", "Por favor, complete todos los campos en el panel de Distribución Uniforme.")
+            messagebox.showinfo("Advertencia",
+                                "Por favor, complete todos los campos en el panel de Distribución Uniforme.")
             return False
         return True
-    
+
     def generar_distribucion_uniforme(self):
         if not self.validar_campos_uniforme():
             return
@@ -96,19 +155,19 @@ class InterfazGrafica(tk.Tk):
             semilla = None
         else:
             semilla = int(semilla_texto)
-        total = int(self.entry_total.get())        
-        
+        total = int(self.entry_total.get())
+
         # Iniciamos la barra de progreso
-        #self.progressbar_uniforme.grid()
-        #self.progressbar_uniforme.start()
-        
+        # self.progressbar_uniforme.grid()
+        # self.progressbar_uniforme.start()
+
         self.ni = generador_uniforme.generarDistrUniforme(self.max_intervalo, self.min_intervalo, semilla, total)
-        
+
         # Detenemos la barra de progreso
-        #self.progressbar_uniforme.stop()
+        # self.progressbar_uniforme.stop()
         self.btn_generar_grafica.config(state="normal")  # Habilita el botón de generar gráfica
         self.btn_generar_csv.config(state="normal")  # Habilita el botón de generar CSV
-        
+
     def generar_grafica(self):
         if not self.validar_campos_uniforme():
             return
@@ -116,19 +175,20 @@ class InterfazGrafica(tk.Tk):
         if num_intervalos_texto == "":
             return  # Si el campo de número de intervalos está vacío, no hagas nada
         num_intervalos = int(num_intervalos_texto)
-        generador_uniforme.generar_histograma(num_intervalos,self.min_intervalo,self.max_intervalo)
-    
+        generador_uniforme.generar_histograma(num_intervalos, self.min_intervalo, self.max_intervalo)
+
     def generar_csv(self):
         if not self.validar_campos_uniforme():
             return
         generador_uniforme.guardar_en_csv()
-    
+
     def validar_campos_normal(self):
         if self.entry_total_normal.get() == "":
-            messagebox.showinfo("Advertencia", "Por favor, complete todos los campos en el panel de Distribución Normal.")
+            messagebox.showinfo("Advertencia",
+                                "Por favor, complete todos los campos en el panel de Distribución Normal.")
             return False
         return True
-    
+
     def generar_distribucion_normal(self):
         if not self.validar_campos_normal():
             return
@@ -138,20 +198,21 @@ class InterfazGrafica(tk.Tk):
         else:
             semilla = int(semilla_texto)
         total = int(self.entry_total_normal.get())
-        generador_normal.generarDistrNormal(semilla,total)
+        generador_normal.generarDistrNormal(semilla, total)
         self.btn_generar_grafica_normal.config(state="normal")
         self.btn_generar_csv_normal.config(state="normal")
-    
+
     def generar_grafica_normal(self):
         if not self.validar_campos_normal():
             return
         generador_normal.generar_grafica()
-    
+
     def generar_csv_normal(self):
         if not self.validar_campos_normal():
             return
         generador_normal.guardar_en_csv()
-    
+
+
 if __name__ == "__main__":
     app = InterfazGrafica()
     app.mainloop()
