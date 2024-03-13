@@ -34,7 +34,7 @@ def generar_grafica():
     # Mostrar el histograma
     plt.show()
 
-def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
+def guardar_en_csv(nombre_archivo='congruenciaMultiplicativa.csv'):
     # Comprobar si la carpeta CSVs existe, si no, crearla
     carpeta_csv = 'CSVs'
     if not os.path.exists(carpeta_csv):
@@ -48,9 +48,9 @@ def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
         escritor_csv.writerows(map(lambda x: [x], numeros_generados))
 
 
-semilla = 1  # Semilla inicial
-a = 48271  # pendiente
-m = 128  # campo numerico
-n = 20  # Cantidad de números aleatorios a generar
-print(congruencia_multiplicativo_range(semilla,a,m,n,min=4,max=9))
-generar_grafica()
+# semilla = 1  # Semilla inicial
+# a = 48271  # pendiente
+# m = 128  # campo numerico
+# n = 20  # Cantidad de números aleatorios a generar
+# print(congruencia_multiplicativo_range(semilla,a,m,n,min=4,max=9))
+# generar_grafica()

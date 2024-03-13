@@ -38,7 +38,7 @@ def generar_grafica():
     # Mostrar el histograma
     plt.show()
 
-def guardar_en_csv(nombre_archivo='congruencia_lineal.csv'):
+def guardar_en_csv(nombre_archivo='congruenciaLineal.csv'):
     # Comprobar si la carpeta CSVs existe, si no, crearla
     carpeta_csv = 'CSVs'
     if not os.path.exists(carpeta_csv):
@@ -52,11 +52,11 @@ def guardar_en_csv(nombre_archivo='congruencia_lineal.csv'):
         escritor_csv.writerows(map(lambda x: [x], numeros_generados))
 
 
-semilla = 1  # Semilla inicial
-a = 9  # pendiente
-c = 3  # Intercepto
-m = 128  # campo numerico
-n = 10  # Cantidad de números aleatorios a generar
-numeros_aleatorios = congruencia_lineal_range(semilla, a, c, m, n, min=10, max=15)
-print(congruencia_lineal_range(semilla, a, c, m, n, min=10, max=15))
-generar_grafica()
+# semilla = 1  # Semilla inicial
+# a = 9  # pendiente
+# c = 3  # Intercepto
+# m = 128  # campo numerico
+# n = 10  # Cantidad de números aleatorios a generar
+# numeros_aleatorios = congruencia_lineal_range(semilla, a, c, m, n, min=10, max=15)
+# print(congruencia_lineal_range(semilla, a, c, m, n, min=10, max=15))
+# generar_grafica()

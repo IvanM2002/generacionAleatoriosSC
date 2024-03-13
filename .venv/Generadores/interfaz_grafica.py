@@ -4,6 +4,7 @@ from tkinter import messagebox
 import generador_uniforme
 import generador_normal
 import congruenciaLineal as cl
+import congruenciaMulti as cm
 
 
 class InterfazGrafica(tk.Tk):
@@ -100,7 +101,7 @@ class InterfazGrafica(tk.Tk):
         self.entry_max_intervalo_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
         self.label_min_intervalo_congLi = ttk.Label(self.panel_congruenciaLineal, text="Min: ")
         self.entry_min_intervalo_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
-        self.label_k_congLi = ttk.Label(self.panel_congruenciaLineal, text="pendiente (k): ")
+        self.label_k_congLi = ttk.Label(self.panel_congruenciaLineal, text="Pendiente (k): ")
         self.entry_k_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
         self.label_c_congLi = ttk.Label(self.panel_congruenciaLineal, text="Intercepto (c): ")
         self.entry_c_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
@@ -131,6 +132,39 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_grafica_congLi.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_csv_congLi.grid(row=9, column=0, columnspan=2, padx=5, pady=5)
 
+        # Creamos los widgets necesarios para congruencia multiplicativa
+        self.label_semilla_congMu = ttk.Label(self.panel_congruenciaMulti, text="Semilla:")
+        self.entry_semilla_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_max_intervalo_congMu = ttk.Label(self.panel_congruenciaMulti, text="Max:")
+        self.entry_max_intervalo_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_min_intervalo_congMu = ttk.Label(self.panel_congruenciaMulti, text="Min: ")
+        self.entry_min_intervalo_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_k_congMu = ttk.Label(self.panel_congruenciaMulti, text="Pendiente (k): ")
+        self.entry_k_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_g_congMu = ttk.Label(self.panel_congruenciaMulti, text="Campo numerico (g): ")
+        self.entry_g_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_total_congMu = ttk.Label(self.panel_congruenciaMulti, text="Total ")
+        self.entry_total_congMu = ttk.Entry(self.panel_congruenciaMulti, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.btn_generar_congMu = ttk.Button(self.panel_congruenciaMulti, text="Generar Congruencia Multiplicativa", command=self.generar_congruencia_multi)
+        self.btn_generar_grafica_congMu = ttk.Button(self.panel_congruenciaMulti, text="Generar Gráfica", command=self.generar_grafica_congMu, state="disabled")
+        self.btn_generar_csv_congMu = ttk.Button(self.panel_congruenciaMulti, text="Generar CSV", command=self.generar_csv_congMu, state="disabled")
+
+        # Alineamos los widgets en el panel de congruencia multiplicativa
+        self.label_semilla_congMu.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.entry_semilla_congMu.grid(row=0, column=1, padx=5, pady=5)
+        self.label_max_intervalo_congMu.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.entry_max_intervalo_congMu.grid(row=1, column=1, padx=5, pady=5)
+        self.label_min_intervalo_congMu.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+        self.entry_min_intervalo_congMu.grid(row=2, column=1, padx=5, pady=5)
+        self.label_k_congMu.grid(row=3, column=0, padx=5, pady=5, sticky="e")
+        self.entry_k_congMu.grid(row=3, column=1, padx=5, pady=5)
+        self.label_g_congMu.grid(row=4, column=0, padx=5, pady=5, sticky="e")
+        self.entry_g_congMu.grid(row=4, column=1, padx=5, pady=5)
+        self.label_total_congMu.grid(row=5, column=0, padx=5, pady=5, sticky="e")
+        self.entry_total_congMu.grid(row=5, column=1, padx=5, pady=5)
+        self.btn_generar_congMu.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_grafica_congMu.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_csv_congMu.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
 
 
     #  self.progressbar_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
@@ -153,12 +187,23 @@ class InterfazGrafica(tk.Tk):
             elif self.entry_max_intervalo_congLi.get() != "" and self.entry_min_intervalo_congLi.get() != "":
                 return True
             else:
-                messagebox.showinfo("Advertencia",
-                                    "Por favor, complete los rangos")
+                messagebox.showinfo("Advertencia","Por favor, complete los rangos")
                 return False
             return True
-        messagebox.showinfo("Advertencia",
-                            "Por favor, complete todos los campos en el panel de Congruencia Lineal.")
+        messagebox.showinfo("Advertencia","Por favor, complete todos los campos en el panel de Congruencia Lineal.")
+        return False
+
+    def validar_campos_congMu(self):
+        if self.entry_semilla_congMu.get() != "" or self.entry_k_congMu.get() != "" or self.entry_g_congMu.get() != "" or self.entry_total_congMu.get() != "":
+            if self.entry_max_intervalo_congMu.get() == "" and self.entry_min_intervalo_congMu.get() == "" :
+                return True
+            elif self.entry_max_intervalo_congMu.get() != "" and self.entry_min_intervalo_congMu.get() != "":
+                return True
+            else:
+                messagebox.showinfo("Advertencia","Por favor, complete los rangos")
+                return False
+            return True
+        messagebox.showinfo("Advertencia","Por favor, complete todos los campos en el panel de Congruencia Multiplicativa.")
         return False
 
     def generar_congruencia_lineal(self):
@@ -178,24 +223,46 @@ class InterfazGrafica(tk.Tk):
         else:
             congruencia_lineal = cl.congruencia_lineal(semilla_congLi, k_congLi, c_congLi, g_congLi, total_congLi)
 
-        # Iniciamos la barra de progreso
-        # self.progressbar_uniforme.grid()
-        # self.progressbar_uniforme.start()
-
-        # Detenemos la barra de progreso
-        # self.progressbar_uniforme.stop()
         self.btn_generar_grafica_congLi.config(state="normal")  # Habilita el botón de generar gráfica
         self.btn_generar_csv_congLi.config(state="normal")  # Habilita el botón de generar CSV
+
+    def generar_congruencia_multi(self):
+        if not self.validar_campos_congMu():
+            return
+
+        semilla_congMu = int(self.entry_semilla_congMu.get())
+        k_congMu = int(self.entry_k_congMu.get())
+        g_congMu = int(self.entry_g_congMu.get())
+        total_congMu = int(self.entry_total_congMu.get())
+        congruencia_multi = []
+        if self.entry_max_intervalo_congMu.get() != "" and self.entry_max_intervalo_congMu.get() != "":
+            max_congMu = int(self.entry_max_intervalo_congMu.get())
+            min_congMu = int(self.entry_min_intervalo_congMu.get())
+            congruencia_multi = cm.congruencia_multiplicativo_range(semilla_congMu, k_congMu, g_congMu, total_congMu, min_congMu, max_congMu)
+        else:
+            congruencia_multi = cm.congruencia_multiplicativo(semilla_congMu, k_congMu, g_congMu, total_congMu)
+
+        self.btn_generar_grafica_congMu.config(state="normal")  # Habilita el botón de generar gráfica
+        self.btn_generar_csv_congMu.config(state="normal")  # Habilita el botón de generar CSV
 
     def generar_grafica_congLi(self):
         if not self.validar_campos_congLi:
             return
         cl.generar_grafica()
 
+    def generar_grafica_congMu(self):
+        if not self.validar_campos_congMu:
+            return
+        cm.generar_grafica()
     def generar_csv_congLi(self):
         if not self.validar_campos_congLi:
             return
         cl.guardar_en_csv()
+
+    def generar_csv_congMu(self):
+        if not self.validar_campos_congMu:
+            return
+        cm.guardar_en_csv()
 
     def generar_distribucion_uniforme(self):
         if not self.validar_campos_uniforme():
