@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import generador_uniforme
 import generador_normal
-import congruenciaLineal
+import congruenciaLineal as cl
 
 
 class InterfazGrafica(tk.Tk):
@@ -108,9 +108,9 @@ class InterfazGrafica(tk.Tk):
         self.entry_g_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
         self.label_total_congLi = ttk.Label(self.panel_congruenciaLineal, text="Total ")
         self.entry_total_congLi = ttk.Entry(self.panel_congruenciaLineal, validate="key", validatecommand=(validate_int_func, "%P"))
-        self.btn_generar_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Congruencia Lineal", command=self.generar_distribucion_normal)
-        self.btn_generar_grafica_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Gráfica", command=self.generar_grafica_normal, state="disabled")
-        self.btn_generar_csv_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar CSV", command=self.generar_csv_normal, state="disabled")
+        self.btn_generar_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Congruencia Lineal", command=self.generar_congruencia_lineal)
+        self.btn_generar_grafica_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar Gráfica", command=self.generar_grafica_congLi, state="disabled")
+        self.btn_generar_csv_congLi = ttk.Button(self.panel_congruenciaLineal, text="Generar CSV", command=self.generar_csv_congLi, state="disabled")
 
         # Alineamos los widgets en el panel de congruencia lineal
         self.label_semilla_congLi.grid(row=0, column=0, padx=5, pady=5, sticky="e")
@@ -145,6 +145,57 @@ class InterfazGrafica(tk.Tk):
                                 "Por favor, complete todos los campos en el panel de Distribución Uniforme.")
             return False
         return True
+
+    def validar_campos_congLi(self):
+        if self.entry_semilla_congLi.get() != "" or self.entry_k_congLi.get() != "" or self.entry_c_congLi.get() != "" or self.entry_g_congLi.get() != "" or self.entry_total_congLi.get() != "":
+            if self.entry_max_intervalo_congLi.get() == "" and self.entry_min_intervalo_congLi.get() == "" :
+                return True
+            elif self.entry_max_intervalo_congLi.get() != "" and self.entry_min_intervalo_congLi.get() != "":
+                return True
+            else:
+                messagebox.showinfo("Advertencia",
+                                    "Por favor, complete los rangos")
+                return False
+            return True
+        messagebox.showinfo("Advertencia",
+                            "Por favor, complete todos los campos en el panel de Congruencia Lineal.")
+        return False
+
+    def generar_congruencia_lineal(self):
+        if not self.validar_campos_congLi():
+            return
+
+        semilla_congLi =  int(self.entry_semilla_congLi.get())
+        k_congLi = int(self.entry_k_congLi.get())
+        c_congLi = int(self.entry_c_congLi.get())
+        g_congLi = int(self.entry_g_congLi.get())
+        total_congLi = int(self.entry_total_congLi.get())
+        congruencia_lineal= []
+        if self.entry_max_intervalo_congLi.get() != "" and self.entry_max_intervalo_congLi.get() != "":
+            max_congLi = int(self.entry_max_intervalo_congLi.get())
+            min_congLi = int(self.entry_min_intervalo_congLi.get())
+            congruencia_lineal = cl.congruencia_lineal_range(semilla_congLi, k_congLi, c_congLi, g_congLi, total_congLi,min_congLi,max_congLi)
+        else:
+            congruencia_lineal = cl.congruencia_lineal(semilla_congLi, k_congLi, c_congLi, g_congLi, total_congLi)
+
+        # Iniciamos la barra de progreso
+        # self.progressbar_uniforme.grid()
+        # self.progressbar_uniforme.start()
+
+        # Detenemos la barra de progreso
+        # self.progressbar_uniforme.stop()
+        self.btn_generar_grafica_congLi.config(state="normal")  # Habilita el botón de generar gráfica
+        self.btn_generar_csv_congLi.config(state="normal")  # Habilita el botón de generar CSV
+
+    def generar_grafica_congLi(self):
+        if not self.validar_campos_congLi:
+            return
+        cl.generar_grafica()
+
+    def generar_csv_congLi(self):
+        if not self.validar_campos_congLi:
+            return
+        cl.guardar_en_csv()
 
     def generar_distribucion_uniforme(self):
         if not self.validar_campos_uniforme():

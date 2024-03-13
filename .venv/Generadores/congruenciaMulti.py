@@ -1,20 +1,56 @@
+from scipy.stats import norm
+import numpy as np
+import matplotlib.pyplot as plt
+import csv
+import os
+
+numeros_generados = []
 def congruencia_multiplicativo(semilla, a, m, n):
-    numeros = []
+    numeros_generados.clear()
     for _ in range(n):
         semilla = (a * semilla) % m
-        numeros.append(semilla / (m - 1))
-    return numeros
+        numeros_generados.append(semilla / (m - 1))
+    return numeros_generados
 
 def congruencia_multiplicativo_range(semilla, a,m,n, min, max):
-    result = []
-    numeros = congruencia_multiplicativo(semilla, a,m,n);
+    numeros = congruencia_multiplicativo(semilla, a,m,n).copy();
+    numeros_generados.clear()
     for numero in numeros:
-        result.append((int)(numero * ((max-min)+1) + min))
-    return result
+        numeros_generados.append((int)(numero * ((max-min)+1) + min))
+    return numeros_generados
+
+def generar_grafica():
+    # Definir los intervalos para el histograma
+    bins = np.arange(min(numeros_generados), max(numeros_generados) + 0.1, 0.1)
+
+    # Crear el histograma
+    plt.hist(numeros_generados, bins=bins, edgecolor='black')
+
+    # Configurar etiquetas y título
+    plt.xlabel('Valor')
+    plt.ylabel('Frecuencia')
+    plt.title('Histograma de Frecuencia para Valores')
+
+    # Mostrar el histograma
+    plt.show()
+
+def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
+    # Comprobar si la carpeta CSVs existe, si no, crearla
+    carpeta_csv = 'CSVs'
+    if not os.path.exists(carpeta_csv):
+        os.makedirs(carpeta_csv)
+
+    ruta_archivo = os.path.join(carpeta_csv, nombre_archivo)
+
+    with open(ruta_archivo, 'w', newline='') as archivo_csv:
+        escritor_csv = csv.writer(archivo_csv)
+        escritor_csv.writerow(['pseudoaleatorios'])
+        escritor_csv.writerows(map(lambda x: [x], numeros_generados))
 
 
 semilla = 1  # Semilla inicial
 a = 48271  # pendiente
 m = 128  # campo numerico
-n = 10  # Cantidad de números aleatorios a generar
-print(congruencia_multiplicativo_range(semilla,a,m,n,min=4,max=7))
+n = 20  # Cantidad de números aleatorios a generar
+print(congruencia_multiplicativo_range(semilla,a,m,n,min=4,max=9))
+generar_grafica()
