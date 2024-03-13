@@ -31,7 +31,7 @@ def generar_grafica():
     plt.hist(numeros_generados, bins=bins, edgecolor='black')
 
     # Configurar etiquetas y título
-    plt.xlabel('Valor Inverso')
+    plt.xlabel('Valor')
     plt.ylabel('Frecuencia')
     plt.title('Histograma de Frecuencia para Valores')
 

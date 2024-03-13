@@ -5,6 +5,7 @@ import generador_uniforme
 import generador_normal
 import congruenciaLineal as cl
 import congruenciaMulti as cm
+import cuadradosMedios as med
 
 
 class InterfazGrafica(tk.Tk):
@@ -22,14 +23,14 @@ class InterfazGrafica(tk.Tk):
         self.panel_normal = ttk.Frame(self.notebook)
         self.panel_congruenciaLineal = ttk.Frame(self.notebook)
         self.panel_congruenciaMulti = ttk.Frame(self.notebook)
-        self.panel_congruenciaCuadrados = ttk.Frame(self.notebook)
+        self.panel_cuadradosMedios = ttk.Frame(self.notebook)
 
         # Agregamos los paneles a las pestañas
         self.notebook.add(self.panel_uniforme, text="Distribución Uniforme")
         self.notebook.add(self.panel_normal, text="Distribución Normal")
         self.notebook.add(self.panel_congruenciaLineal, text="Congruencia Lineal")
         self.notebook.add(self.panel_congruenciaMulti, text="Congruencia Multiplicativa")
-        self.notebook.add(self.panel_congruenciaCuadrados, text="Cuadrados Medios")
+        self.notebook.add(self.panel_cuadradosMedios, text="Cuadrados Medios")
 
         # Creamos los widgets necesarios para el panel de distribución uniforme
         self.label_max_intervalo = ttk.Label(self.panel_uniforme, text="Máximo Intervalo:")
@@ -166,6 +167,32 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_grafica_congMu.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
         self.btn_generar_csv_congMu.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
 
+        # Creamos los widgets necesarios para cuadrados medios
+        self.label_semilla_cuaMed = ttk.Label(self.panel_cuadradosMedios, text="Semilla:")
+        self.entry_semilla_cuaMed = ttk.Entry(self.panel_cuadradosMedios, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_max_intervalo_cuaMed = ttk.Label(self.panel_cuadradosMedios, text="Max:")
+        self.entry_max_intervalo_cuaMed = ttk.Entry(self.panel_cuadradosMedios, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_min_intervalo_cuaMed = ttk.Label(self.panel_cuadradosMedios, text="Min: ")
+        self.entry_min_intervalo_cuaMed = ttk.Entry(self.panel_cuadradosMedios, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.label_total_cuaMed = ttk.Label(self.panel_cuadradosMedios, text="Total ")
+        self.entry_total_cuaMed = ttk.Entry(self.panel_cuadradosMedios, validate="key", validatecommand=(validate_int_func, "%P"))
+        self.btn_generar_cuaMed = ttk.Button(self.panel_cuadradosMedios, text="Generar Cuadrados medios", command=self.generar_congruencia_cuaMed)
+        self.btn_generar_grafica_cuaMed = ttk.Button(self.panel_cuadradosMedios, text="Generar Gráfica", command=self.generar_grafica_cuaMed, state="disabled")
+        self.btn_generar_csv_cuaMed = ttk.Button(self.panel_cuadradosMedios, text="Generar CSV", command=self.generar_csv_cuaMed, state="disabled")
+
+        # Alineamos los widgets en el panel de cuadrados medios
+        self.label_semilla_cuaMed.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.entry_semilla_cuaMed.grid(row=0, column=1, padx=5, pady=5)
+        self.label_max_intervalo_cuaMed.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.entry_max_intervalo_cuaMed.grid(row=1, column=1, padx=5, pady=5)
+        self.label_min_intervalo_cuaMed.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+        self.entry_min_intervalo_cuaMed.grid(row=2, column=1, padx=5, pady=5)
+        self.label_total_cuaMed.grid(row=3, column=0, padx=5, pady=5, sticky="e")
+        self.entry_total_cuaMed.grid(row=3, column=1, padx=5, pady=5)
+        self.btn_generar_cuaMed.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_grafica_cuaMed.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_csv_cuaMed.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+
 
     #  self.progressbar_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
 
@@ -204,6 +231,19 @@ class InterfazGrafica(tk.Tk):
                 return False
             return True
         messagebox.showinfo("Advertencia","Por favor, complete todos los campos en el panel de Congruencia Multiplicativa.")
+        return False
+
+    def validar_campos_cuaMed(self):
+        if self.entry_semilla_cuaMed.get()  != "" or self.entry_total_cuaMed.get() != "":
+            if self.entry_max_intervalo_cuaMed.get() == "" and self.entry_min_intervalo_cuaMed.get() == "" :
+                return True
+            elif self.entry_max_intervalo_cuaMed.get() != "" and self.entry_min_intervalo_cuaMed.get() != "":
+                return True
+            else:
+                messagebox.showinfo("Advertencia","Por favor, complete los rangos")
+                return False
+            return True
+        messagebox.showinfo("Advertencia","Por favor, complete todos los campos en el panel de Cuadrados medios.")
         return False
 
     def generar_congruencia_lineal(self):
@@ -245,11 +285,32 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_grafica_congMu.config(state="normal")  # Habilita el botón de generar gráfica
         self.btn_generar_csv_congMu.config(state="normal")  # Habilita el botón de generar CSV
 
+    def generar_congruencia_cuaMed(self):
+        if not self.validar_campos_cuaMed:
+            return
+
+        semilla_cuaMed = int(self.entry_semilla_cuaMed.get())
+        total_cuaMed = int(self.entry_total_cuaMed.get())
+        cuadrados_medios = []
+        if self.entry_max_intervalo_cuaMed.get() != "" and self.entry_max_intervalo_cuaMed.get() != "":
+            max_cuaMed = int(self.entry_max_intervalo_cuaMed.get())
+            min_cuaMed = int(self.entry_min_intervalo_cuaMed.get())
+            cuadrados_medios = med.cuadrados_medios_range(semilla_cuaMed, min_cuaMed, max_cuaMed, total_cuaMed)
+        else:
+            cuadrados_medios = med.cuadrados_medios(semilla_cuaMed, total_cuaMed)
+
+        self.btn_generar_grafica_cuaMed.config(state="normal")  # Habilita el botón de generar gráfica
+        self.btn_generar_csv_cuaMed.config(state="normal")  # Habilita el botón de generar CSV
+
     def generar_grafica_congLi(self):
         if not self.validar_campos_congLi:
             return
         cl.generar_grafica()
 
+    def generar_grafica_cuaMed(self):
+        if not self.validar_campos_cuaMed:
+            return
+        med.generar_grafica()
     def generar_grafica_congMu(self):
         if not self.validar_campos_congMu:
             return
@@ -263,6 +324,11 @@ class InterfazGrafica(tk.Tk):
         if not self.validar_campos_congMu:
             return
         cm.guardar_en_csv()
+
+    def generar_csv_cuaMed(self):
+        if not self.validar_campos_cuaMed:
+            return
+        med.guardar_en_csv()
 
     def generar_distribucion_uniforme(self):
         if not self.validar_campos_uniforme():

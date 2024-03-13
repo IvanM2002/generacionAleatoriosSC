@@ -29,13 +29,13 @@ def generar_grafica():
     plt.hist(numeros_generados, bins=bins, edgecolor='black')
 
     # Configurar etiquetas y título
-    plt.xlabel('Valor Inverso')
+    plt.xlabel('Valor')
     plt.ylabel('Frecuencia')
     plt.title('Histograma de Frecuencia para Valores')
     # Mostrar el histograma
     plt.show()
 
-def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
+def guardar_en_csv(nombre_archivo='cuadradosMedios.csv'):
     # Comprobar si la carpeta CSVs existe, si no, crearla
     carpeta_csv = 'CSVs'
     if not os.path.exists(carpeta_csv):
@@ -48,6 +48,6 @@ def guardar_en_csv(nombre_archivo='distribucionNormal.csv'):
         escritor_csv.writerow(['pseudoaleatorios'])
         escritor_csv.writerows(map(lambda x: [x], numeros_generados))
 
-cuadrados_medios_range(7894,20,30,10)
-print(numeros_generados)
-generar_grafica()
+# cuadrados_medios_range(7894,20,30,10)
+# print(numeros_generados)
+# generar_grafica()
