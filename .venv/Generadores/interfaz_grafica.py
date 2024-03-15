@@ -208,7 +208,7 @@ class InterfazGrafica(tk.Tk):
         return True
 
     def validar_campos_congLi(self):
-        if self.entry_semilla_congLi.get() != "" or self.entry_k_congLi.get() != "" or self.entry_c_congLi.get() != "" or self.entry_g_congLi.get() != "" or self.entry_total_congLi.get() != "":
+        if self.entry_semilla_congLi.get() != "" and self.entry_k_congLi.get() != "" and self.entry_c_congLi.get() != "" and self.entry_g_congLi.get() != "" and self.entry_total_congLi.get() != "":
             if self.entry_max_intervalo_congLi.get() == "" and self.entry_min_intervalo_congLi.get() == "" :
                 return True
             elif self.entry_max_intervalo_congLi.get() != "" and self.entry_min_intervalo_congLi.get() != "":
@@ -221,7 +221,7 @@ class InterfazGrafica(tk.Tk):
         return False
 
     def validar_campos_congMu(self):
-        if self.entry_semilla_congMu.get() != "" or self.entry_k_congMu.get() != "" or self.entry_g_congMu.get() != "" or self.entry_total_congMu.get() != "":
+        if self.entry_semilla_congMu.get() != "" and self.entry_k_congMu.get() != "" and self.entry_g_congMu.get() != "" and self.entry_total_congMu.get() != "":
             if self.entry_max_intervalo_congMu.get() == "" and self.entry_min_intervalo_congMu.get() == "" :
                 return True
             elif self.entry_max_intervalo_congMu.get() != "" and self.entry_min_intervalo_congMu.get() != "":
@@ -234,7 +234,7 @@ class InterfazGrafica(tk.Tk):
         return False
 
     def validar_campos_cuaMed(self):
-        if self.entry_semilla_cuaMed.get()  != "" or self.entry_total_cuaMed.get() != "":
+        if self.entry_semilla_cuaMed.get()  != "" and self.entry_total_cuaMed.get() != "":
             if self.entry_max_intervalo_cuaMed.get() == "" and self.entry_min_intervalo_cuaMed.get() == "" :
                 return True
             elif self.entry_max_intervalo_cuaMed.get() != "" and self.entry_min_intervalo_cuaMed.get() != "":
@@ -286,7 +286,7 @@ class InterfazGrafica(tk.Tk):
         self.btn_generar_csv_congMu.config(state="normal")  # Habilita el botón de generar CSV
 
     def generar_congruencia_cuaMed(self):
-        if not self.validar_campos_cuaMed:
+        if not self.validar_campos_cuaMed():
             return
 
         semilla_cuaMed = int(self.entry_semilla_cuaMed.get())
