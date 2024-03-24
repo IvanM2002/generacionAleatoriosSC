@@ -68,6 +68,10 @@ class InterfazGrafica(tk.Tk):
         # Creamos los widgets necesarios para el panel de distribución normal
         self.label_semilla_normal = ttk.Label(self.panel_normal, text="Semilla:")
         self.entry_semilla_normal = ttk.Entry(self.panel_normal)
+        self.label_media_normal = ttk.Label(self.panel_normal, text="Media:")
+        self.entry_media_normal = ttk.Entry(self.panel_normal)
+        self.label_desEst_normal = ttk.Label(self.panel_normal, text="Desviación estandar:")
+        self.entry_desEst_normal = ttk.Entry(self.panel_normal)
         self.label_total_normal = ttk.Label(self.panel_normal, text="Total:")
         self.entry_total_normal = ttk.Entry(self.panel_normal)
         self.btn_generar_distribucion_normal = ttk.Button(self.panel_normal, text="Generar Distribución Normal", command=self.generar_distribucion_normal)
@@ -78,11 +82,15 @@ class InterfazGrafica(tk.Tk):
         # Alineamos los widgets en el panel de distribución normal
         self.label_semilla_normal.grid(row=0, column=0, padx=5, pady=5, sticky="e")
         self.entry_semilla_normal.grid(row=0, column=1, padx=5, pady=5)
-        self.label_total_normal.grid(row=1, column=0, padx=5, pady=5, sticky="e")
-        self.entry_total_normal.grid(row=1, column=1, padx=5, pady=5)
-        self.btn_generar_distribucion_normal.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
-        self.btn_generar_grafica_normal.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
-        self.btn_generar_csv_normal.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+        self.label_media_normal.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.entry_media_normal.grid(row=1, column=1, padx=5, pady=5)
+        self.label_desEst_normal.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+        self.entry_desEst_normal.grid(row=2, column=1, padx=5, pady=5)
+        self.label_total_normal.grid(row=3, column=0, padx=5, pady=5, sticky="e")
+        self.entry_total_normal.grid(row=3, column=1, padx=5, pady=5)
+        self.btn_generar_distribucion_normal.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_grafica_normal.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        self.btn_generar_csv_normal.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
         # funcion para validar numeros
         def validate_int(value_if_allowed):
@@ -383,7 +391,9 @@ class InterfazGrafica(tk.Tk):
         else:
             semilla = int(semilla_texto)
         total = int(self.entry_total_normal.get())
-        generador_normal.generarDistrNormal(semilla, total)
+        media = int(self.entry_media_normal.get())
+        desviacion_estandar = int(self.entry_desEst_normal.get())
+        generador_normal.generarDistrNormal(semilla, total,media,desviacion_estandar)
         self.btn_generar_grafica_normal.config(state="normal")
         self.btn_generar_csv_normal.config(state="normal")
 

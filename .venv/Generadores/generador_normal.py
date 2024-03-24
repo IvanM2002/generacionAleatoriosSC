@@ -11,16 +11,7 @@ c = 1013904223                      #Intersección = {c E Z | 0 <= C < m} 
 m = 2**32                           #Conjunto = {m E Z | m > 0} 
 semilla = 1                         #Semilla -> [0,m)  = {Xo E Z | 0 <= Xo < m}
 ri = []                             #Numeros Ri
-
-
-# Lista de números pseudoaleatorios de convolución
-numeros_pseudoaleatoriosMedDes = [15.68866392,17.08559662,17.15452055,15.15261532,17.63585243,17.10922827,16.64418793,
-                                  16.83252325,15.46909741,17.43582994,15.87918557,16.04895496,16.12241714,17.51470964,17.89848077]
-
-# Parámetros de la distribución normal
-media = np.mean(numeros_pseudoaleatoriosMedDes)
-desviacion_estandar = np.std(numeros_pseudoaleatoriosMedDes)
-ni = []                                                             #Numeros Ni
+ni = []                             #Numeros Ni
 
 
 # Función para generar Ri con congruencia Lineal
@@ -34,7 +25,7 @@ def generar_ri(semilla,n):
         ri.append(semilla / (m - 1))    
 
 
-def generarDistrNormal(semilla,n):
+def generarDistrNormal(semilla,n,media,desviacion_estandar):
     global ni
     ni = []
     generar_ri(semilla,n)
