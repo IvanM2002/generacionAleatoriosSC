@@ -15,13 +15,13 @@ ni = []                             #Numeros Ni
 def generar_ri(semilla,total):   
     ri.clear()
     if semilla is None:
-        semilla = random.randint(0, m - 1)  #Semilla -> [0,m)  = {Xo E Z | 0 <= Xo < m} se utiliza unicamente para generar una semilla si no se especifica una
+        semilla = random.randint(0, m - 1)  #Semilla -> [0,m)  = {Xo E Z | 0 <= Xo < m}
+        # se utiliza unicamente para generar una semilla si no se especifica una
         
     for _ in range(total):
         semilla = (a * semilla + c) % m
         ri.append(semilla / (m - 1))                  
-        
-        
+
 #FUNCIÓN PARA GENERAR NI CON DISTRIBUCION UNIFORME
 #Intervalo superior (maxI)
 #Intervalo Inferior (minI)

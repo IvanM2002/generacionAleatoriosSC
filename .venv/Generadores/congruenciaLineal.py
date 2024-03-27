@@ -6,7 +6,6 @@ import os
 
 numeros_generados = []
 
-
 def congruencia_lineal(semilla, a, c, m, n):
     numeros_generados.clear()
     for _ in range(n):
